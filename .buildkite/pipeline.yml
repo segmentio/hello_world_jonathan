@@ -1,0 +1,57 @@
+env:
+  # "Contexts" are a set of standard secrets loaded from chamber into environment variables. You can see a full list here:
+  # https://paper.dropbox.com/doc/Buildkite-v1-User-Guide--A8NCadIodtK3qWwR5o359cPUAg-9EI0hXYSkcOb2EHotsVSD#:uid=974685769019479549157845&h2=Contexts
+  SEGMENT_CONTEXTS: "snyk,ecr,aws-credentials"
+  # We maintain a set of standard language-specific docker images with a common base. You can see a full list here:
+  # https://paper.dropbox.com/doc/Buildkite-v1-User-Guide--A8NCadIodtK3qWwR5o359cPUAg-9EI0hXYSkcOb2EHotsVSD#:uid=484154666618022590482348&h2=Standard-Docker-Images
+  SEGMENT_BUILDKITE_IMAGE: buildkite-agent-golang1.17
+steps:
+  - label: ":clippy: Build"
+    # A Buildkite agent does the work of running your job. This should be v1 for most builds.
+    # https://paper.dropbox.com/doc/Buildkite-v1-User-Guide--A8NCadIodtK3qWwR5o359cPUAg-9EI0hXYSkcOb2EHotsVSD#:uid=471515735247630716621432&h2=Buildkite-Agents
+    agents:
+      queue: v1
+    commands: |
+      make vendor
+      make build
+    plugins:
+      - ssh://git@github.com/segmentio/cache-buildkite-plugin#v3.0.0:
+          key: hello_world_jonathan-modules-{{ checksum 'go.mod' }}
+          paths:
+            - vendor/
+          save: true
+
+  - label: ":lock: Snyk"
+    # A Buildkite agent does the work of running your job. This should be v1 for most builds.
+    # https://paper.dropbox.com/doc/Buildkite-v1-User-Guide--A8NCadIodtK3qWwR5o359cPUAg-9EI0hXYSkcOb2EHotsVSD#:uid=471515735247630716621432&h2=Buildkite-Agents
+    agents:
+      queue: v1
+    command: "bk-snyk"
+
+  # wait tells buildkite to not run the next set of steps until all previous steps succeed first
+  - wait: ~
+
+  - label: ":test_tube: test"
+    agents:
+      queue: v1
+    commands: |
+      make test
+    plugins:
+      - ssh://git@github.com/segmentio/cache-buildkite-plugin#v3.0.0:
+          key: hello_world_jonathan-modules-{{ checksum 'go.mod' }}
+          paths:
+            - vendor/
+
+  - wait: ~
+
+    # Note the below command will not publish to any ECR repository until one is created. See https://paper.dropbox.com/doc/ECR-Repositories-User-Guide--Baf8qogH~hPrIGo7MYavVkFxAg-mHGOBHgjg6xMEhLWlDBRE#:uid=378901835518799285506068&h2=Creating-repositories
+    # The below command should push to all accounts where that ECR repo is present.
+    # See https://github.com/segmentio/imager for more details
+  - label: ":hammer: Build and Publish container image"
+    commands: |
+      imager buildpush . -d all --build-arg VERSION_REF=$${BUILDKITE_SHORT_COMMIT}
+    plugins:
+      - ssh://git@github.com/segmentio/cache-buildkite-plugin#v3.0.0:
+          key: hello_world_jonathan-modules-{{ checksum 'go.mod' }}
+          paths:
+            - vendor/

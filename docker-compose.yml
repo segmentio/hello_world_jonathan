@@ -1,0 +1,7 @@
+version: "2"
+services:
+  stats:
+    image: 528451384384.dkr.ecr.us-west-2.amazonaws.com/dogstatsd
+    ports:
+      - "8125:8125/udp"
+    command: "agent"

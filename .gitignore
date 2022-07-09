@@ -2,3 +2,4 @@
 profile.out
 .coverprofile
 vendor/
+.vscode

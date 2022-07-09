@@ -24,9 +24,9 @@ func TestHello(t *testing.T) {
 	defer done()
 
 	var res string
-	err := client.Call(context.Background(), "HelloWorld.Hello", "prateek", &res)
+	err := client.Call(context.Background(), "HelloWorld.Hello", "Jonathan", &res)
 	assert.NoError(t, err)
-	assert.Equal(t, "Hello, prateek!", res)
+	assert.Equal(t, "Hello, Jonathan!", res)
 }
 
 func setup(t *testing.T) (*rpc.Client, func()) {

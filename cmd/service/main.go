@@ -40,7 +40,7 @@ var (
 func main() {
 	// Define and load the configuration options provided by this program.
 	config := struct {
-		DatadogAddress string `conf:"datadog_address" help:"datadog adress"`
+		DatadogAddress string `conf:"datadog_address" help:"datadog address"`
 		Debug          bool   `conf:"debug" help:"enables debug logging"`
 		Address        string `conf:"address" help:"address on which the server should listen"`
 	}{

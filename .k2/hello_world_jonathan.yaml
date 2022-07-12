@@ -1,14 +1,14 @@
 apiVersion: platform.segment.com/v1alpha1
 kind: SegmentApplicationExperimental
 metadata:
-  name: hello_world_jonathan
-  namespace: hello_world_jonathan
+  name: hello-world-jonathan
+  namespace: hello-world-jonathan
 spec:
   targets:
     - name: stage
       cluster: stage:us-west-2:piw
       replicatedService:
-        iamRoleName: hello_world_jonathan
+        iamRoleName: hello-world-jonathan
         env: &env
           DATADOG_ADDRESS: $(NODE_IP):8125
         autoScale:
@@ -20,7 +20,7 @@ spec:
             - resource: memory
               utilization: 50
         mainContainer: &container
-          imageName: hello_world_jonathan
+          imageName: hello-world-jonathan
           imageRegistry: 528451384384.dkr.ecr.us-west-2.amazonaws.com
           ports:
           - name: http

@@ -16,7 +16,7 @@ func TestHelloWorld(t *testing.T) {
 	var res string
 	err := client.Call(context.Background(), "HelloWorld.HelloWorld", nil, &res)
 	assert.NoError(t, err)
-	assert.Equal(t, "Hello, World!", res)
+	assert.Equal(t, "Hello, World and the length of your name is 5", res)
 }
 
 func TestHello(t *testing.T) {

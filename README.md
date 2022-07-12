@@ -43,7 +43,7 @@ To execute rpc for `HelloWorld.Hello`
 # In console window 2
 curl --header "Content-Type: application/json" \
   --request POST \
-  --data '{"jsonrpc": "2.0", "method": "HelloWorld.Hello", "params": "prateek", "id": "foo"}' \
+  --data '{"jsonrpc": "2.0", "method": "HelloWorld.Hello", "params": "Jonathan", "id": "foo"}' \
 http://localhost:3000/rpc
 ```
 

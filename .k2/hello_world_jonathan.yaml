@@ -1,4 +1,3 @@
-# Rename file to "hello_world_jonathan.yaml" before deployment
 apiVersion: platform.segment.com/v1alpha1
 kind: SegmentApplicationExperimental
 metadata:
@@ -6,30 +5,26 @@ metadata:
   namespace: hello_world_jonathan
 spec:
   targets:
-    - name: stage #name of the target, e.g. "stage"
-      cluster: stage:us-west-2:piw # cluster for this target in <account name>:<region>:<cluster name> format
+    - name: stage
+      cluster: stage:us-west-2:piw
       replicatedService:
-        iamRoleName: hello_world_jonathan #name of your IAM role, which is usually the app name
+        iamRoleName: hello_world_jonathan
+        env: &env
+          DATADOG_ADDRESS: $(NODE_IP):8125
         autoScale:
-          minReplicas: 3 # min number of replicas e.g. 3
-          maxReplicas: 3 # max number of replicas e.g. 30
+          minReplicas: 1
+          maxReplicas: 1
           resources:
             - resource: cpu
-              utilization: 50 # this is a percentage
+              utilization: 50
             - resource: memory
-              utilization: 50 # this is a percentage
-        ingress:
-          type: internal
-          securityGroups:
-            - # List of security group names or IDs that ALB will be added to.
-            - # If left blank, will default to "[app name]-[cluster name]-alb
+              utilization: 50
         mainContainer: &container
           imageName: hello_world_jonathan
           imageRegistry: 528451384384.dkr.ecr.us-west-2.amazonaws.com
-          command:
-            - "--datadog_address"
-            - "$(NODE_IP):8125"
           ports:
           - name: http
             containerPort: 3000
           healthCheckPath: "/internal/health"
+          ctlstore:
+             disabled: true

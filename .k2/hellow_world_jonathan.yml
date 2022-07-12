@@ -1,4 +1,4 @@
-# TODO: Rename file to "hello_world_jonathan.yaml" before deployment
+# Rename file to "hello_world_jonathan.yaml" before deployment
 apiVersion: platform.segment.com/v1alpha1
 kind: SegmentApplicationExperimental
 metadata:
@@ -6,13 +6,13 @@ metadata:
   namespace: hello_world_jonathan
 spec:
   targets:
-    - name: # TODO: name of the target, e.g. "stage"
-      cluster: # TODO: cluster for this target in <account name>:<region>:<cluster name> format
+    - name: stage-hello_world_jonathan #name of the target, e.g. "stage"
+      cluster: stage:us-west-2:core # cluster for this target in <account name>:<region>:<cluster name> format
       replicatedService:
-        iamRoleName: # TODO: name of your IAM role, which is usually the app name
+        iamRoleName: hello_world_jonathan #name of your IAM role, which is usually the app name
         autoScale:
-          minReplicas: # TODO: min number of replicas e.g. 3
-          maxReplicas: # TODO: max number of replicas e.g. 30
+          minReplicas: 3 # min number of replicas e.g. 3
+          maxReplicas: 3 # max number of replicas e.g. 30
           resources:
             - resource: cpu
               utilization: 50 # this is a percentage
@@ -21,7 +21,7 @@ spec:
         ingress:
           type: internal
           securityGroups:
-            - # TODO: List of security group names or IDs that ALB will be added to.
+            - # List of security group names or IDs that ALB will be added to.
             - # If left blank, will default to "[app name]-[cluster name]-alb
         mainContainer: &container
           imageName: hello_world_jonathan

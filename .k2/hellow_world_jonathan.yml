@@ -7,7 +7,7 @@ metadata:
 spec:
   targets:
     - name: stage-hello_world_jonathan #name of the target, e.g. "stage"
-      cluster: stage:us-west-2:core # cluster for this target in <account name>:<region>:<cluster name> format
+      cluster: stage:us-west-2:piw # cluster for this target in <account name>:<region>:<cluster name> format
       replicatedService:
         iamRoleName: hello_world_jonathan #name of your IAM role, which is usually the app name
         autoScale:
